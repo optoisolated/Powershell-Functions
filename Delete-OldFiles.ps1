@@ -3,6 +3,8 @@ $Directory = "C:\Path\To\Directory"  # Replace with the path to your target dire
 $LogFile = "C:\Path\To\DeletionLog.txt"  # Replace with the path to your log file
 $AuditLogFile = "C:\Path\To\AuditLog.txt"  # Replace with the path to your audit log file
 
+$DaysOldToDelete = 90 # At how many days old should the files be deleted
+
 # Check if the directory exists
 if (!(Test-Path -Path $Directory)) {
     Write-Output "The directory $Directory does not exist. Exiting script."
@@ -21,7 +23,7 @@ Add-Content -Path $LogFile -Value $LogHeader
 Add-Content -Path $AuditLogFile -Value $AuditHeader
 
 # Find and delete files older than 90 days
-$Files = Get-ChildItem -Path $Directory -File -Recurse | Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-90) }
+$Files = Get-ChildItem -Path $Directory -File -Recurse | Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(0 - $DaysOldToDelete) }
 
 foreach ($File in $Files) {
     try {
